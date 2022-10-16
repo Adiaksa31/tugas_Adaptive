@@ -40,10 +40,63 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController dateInput = TextEditingController();
+  late TextEditingController textController;
+  DateTime date = DateTime(2016, 10, 26);
+
   @override
+  void _showAlertDialog(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: const Text('Peringatan'),
+        content: const Text('Apakah tanggal yang anda masukkan sudah benar?'),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('No'),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDialog(Widget child) {
+    showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => Container(
+              height: 216,
+              padding: const EdgeInsets.only(top: 6.0),
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              color: CupertinoColors.systemBackground.resolveFrom(context),
+              child: SafeArea(
+                top: false,
+                child: child,
+              ),
+            ));
+  }
+
   void initState() {
-    dateInput.text = ""; //set the initial value of text field
+    dateInput.text = "";
+    textController = TextEditingController(text: 'initial text');
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -63,22 +116,40 @@ class _MyHomePageState extends State<MyHomePage> {
         ? CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
               backgroundColor: CupertinoColors.systemGrey.withOpacity(0.5),
-              middle: const Text('Flutter Adactive IOS'),
+              middle: CupertinoSearchTextField(
+                controller: textController,
+                placeholder: 'Search',
+              ),
             ),
             child: Column(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 0),
-                  child: CustomPaint(
-                    painter: BackgroundPainter(),
-                    child: Container(
-                      width: MediaQueryWidth,
-                      height: MediaQueryHeight,
+                _DatePickerItem(
+                  children: <Widget>[
+                    const Text('Date'),
+                    CupertinoButton(
+                      onPressed: () => _showDialog(
+                        CupertinoDatePicker(
+                          initialDateTime: date,
+                          mode: CupertinoDatePickerMode.date,
+                          use24hFormat: true,
+                          onDateTimeChanged: (DateTime newDate) {
+                            setState(() => date = newDate);
+                          },
+                        ),
+                      ),
+                      child: Text(
+                        '${date.month}-${date.day}-${date.year}',
+                        style: const TextStyle(
+                          fontSize: 22.0,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 150.0),
+                    CupertinoButton(
+                      onPressed: () => _showAlertDialog(context),
+                      child: const Text('SUBMIT'),
+                      color: Color.fromARGB(255, 0, 153, 255),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -164,7 +235,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     style: TextButton.styleFrom(
                                       primary: Color.fromARGB(255, 4, 0, 5),
                                       backgroundColor:
-                                          Color.fromARGB(255, 255, 255, 255),
+                                          Color.fromARGB(255, 0, 212, 250),
                                     ),
                                     onPressed: () => showDialog<String>(
                                       context: context,
@@ -341,6 +412,37 @@ class CustomSearchDelegate extends SearchDelegate {
           title: Text(result),
         );
       },
+    );
+  }
+}
+
+class _DatePickerItem extends StatelessWidget {
+  const _DatePickerItem({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: CupertinoColors.inactiveGray,
+            width: 0.0,
+          ),
+          bottom: BorderSide(
+            color: CupertinoColors.inactiveGray,
+            width: 0.0,
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: children,
+        ),
+      ),
     );
   }
 }
