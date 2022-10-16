@@ -19,9 +19,9 @@ class BackgroundPainter extends CustomPainter {
     path.close();
 
     var colors = [
-      Color.fromARGB(255, 255, 255, 255),
-      Color.fromARGB(255, 255, 255, 255),
-      Color.fromARGB(255, 255, 255, 255)
+      Color.fromARGB(255, 0, 183, 255),
+      Color.fromARGB(255, 0, 183, 255),
+      Color.fromARGB(255, 0, 183, 255),
     ];
     var stops = [0 / 2, .8 / 2, 1.8 / 2];
 
