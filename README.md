@@ -1,6 +1,11 @@
 # flutter_application_adaptive
 
-A new Flutter project.
+Project Adaptive
+
+Layout Platform Android
+![Screenshot (61)](https://user-images.githubusercontent.com/93781731/196049187-b4ea55d3-6c77-4a1b-a941-1a4d117db67e.png) ![Screenshot (64)](https://user-images.githubusercontent.com/93781731/196049197-045adb8d-eef3-49bc-b98d-6387fb05c367.png)
+
+Layout Platform IOS menyusul dikarenakan belum ada emulator IOS
 
 ## Getting Started
 
